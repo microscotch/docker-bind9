@@ -36,12 +36,13 @@ for DOCKERFILE_PATH in $(ls Dockerfile*); do
       --tag "${IMAGE_NAME}" \
       .
 
-  docker create --rm --name "test-${DOCKER_TAG}"  "${IMAGE_NAME}" && {
-      docker cp "test-${DOCKER_TAG}":/usr/bin/qemu-${QEMU_USER_STATIC_ARCH}-static - >/dev/null && {
-          echo "qemu binary found in image while it should not"
-          docker rm "test-${DOCKER_TAG}"
-          exit 1
-      } 
-  } || docker rm "test-${DOCKER_TAG}" || true
-
+  if [ "${BUILD_ARCH}" != "Dockerfile" ];then 
+    docker create --rm --name "test-${DOCKER_TAG}"  "${IMAGE_NAME}" && {
+        docker cp "test-${DOCKER_TAG}":/usr/bin/qemu-${QEMU_USER_STATIC_ARCH}-static - >/dev/null && {
+            echo "qemu binary found in image while it should not"
+            docker rm "test-${DOCKER_TAG}"
+            exit 1
+        } 
+    } || docker rm "test-${DOCKER_TAG}" || true
+  fi
 done
