@@ -28,6 +28,8 @@ for DOCKERFILE_PATH in $(ls Dockerfile*); do
 
   # build
 
+  IMAGE_NAME=${DOCKER_REPO}:${BUILD_ARCH:-x86_64}-${DOCKER_TAG#*-}
+
   docker build \
       --file "${DOCKERFILE_PATH}" \
       --build-arg BUILD_DATE="$(date -u +"%Y-%m-%dT%H:%M:%SZ")" \
@@ -45,4 +47,6 @@ for DOCKERFILE_PATH in $(ls Dockerfile*); do
         } 
     } || docker rm "test-${DOCKER_TAG}" || true
   fi
+
+  docker push "${IMAGE_NAME}"
 done
