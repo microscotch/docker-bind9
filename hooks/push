@@ -1,7 +1,9 @@
+#!/bin/bash
+
 for DOCKERFILE_PATH in $(ls Dockerfile*); do
 
   BUILD_ARCH=$(echo "${DOCKERFILE_PATH}" | cut -d '.' -f 2)
-  
+
   # build
   [[ ${BUILD_ARCH} == "arm" ]] && BUILD_ARCH=armv7
   [[ ${BUILD_ARCH} == "Dockerfile" ]] && BUILD_ARCH=x86_64
